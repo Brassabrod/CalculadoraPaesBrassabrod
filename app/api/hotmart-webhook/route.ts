@@ -44,3 +44,8 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ ok: true, action: "ignored", event })
 }
+
+// Suporte a requisições GET (Hotmart testa com GET primeiro)
+export async function GET() {
+  return NextResponse.json({ ok: true, message: "Webhook ativo" }, { status: 200 })
+}
