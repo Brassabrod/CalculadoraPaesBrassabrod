@@ -49,13 +49,23 @@ import Footer from "./Footer"; // Importa o Footer
 const LOGO_IMG = "/logo_pao3x4.png";
 
 export default function App() {
-  const dentroDaFaixa = (valor, min, max) => valor >= min && valor <= max;
-  const Aviso = ({ condicao, texto, className }) =>
-    !condicao ? (
-      <p className={className || "pl-[130px] text-xs text-[#ffc857] mt-1 font-semibold"}>
-        {texto}
-      </p>
-    ) : null;
+  const { authorized, checking } = useCheckAccess();
+
+  if (checking) {
+    return <div>Carregando...</div>;
+  }
+  if (!authorized) {
+    return <div>Acesso negado.</div>;
+  }
+
+  // Aqui segue o código da sua calculadora original:
+  return (
+    <div className="min-h-screen w-full flex flex-col items-center bg-[#232221]">
+      {/* ... restante do seu código ... */}
+    </div>
+  );
+}
+
 
   // Estado dos campos
   const [qtdSimples, setQtdSimples] = useState("5");
