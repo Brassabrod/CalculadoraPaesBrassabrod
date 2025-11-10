@@ -1,4 +1,47 @@
-import React, { useState } from "react";
+import React,
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseClient = createClient(
+  process.env.REACT_APP_SUPABASE_URL,
+  process.env.REACT_APP_SUPABASE_ANON_KEY
+);
+
+function useCheckAccess() {
+  const [authorized, setAuthorized] = React.useState(false);
+  const [checking, setChecking] = React.useState(true);
+
+  React.useEffect(() => {
+    async function check() {
+      const userEmail = prompt("Por favor, digite seu e-mail para acesso:");
+      if (!userEmail) {
+        alert("E-mail é obrigatório para acesso.");
+        setChecking(false);
+        return;
+      }
+
+      const { data, error } = await supabaseClient
+        .from('allowed_emails')
+        .select('status')
+        .eq('email', userEmail.toLowerCase())
+        .single();
+
+      if (error || !data || data.status !== 'active') {
+        alert("Desculpe, mas você não tem acesso à calculadora.");
+        setChecking(false);
+        return;
+      }
+
+      setAuthorized(true);
+      setChecking(false);
+    }
+
+    check();
+  }, []);
+
+  return { authorized, checking };
+}
+
+{ useState } from "react";
 import "./style.css";
 import "./index.css";
 import Footer from "./Footer"; // Importa o Footer
